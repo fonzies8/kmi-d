@@ -67,16 +67,28 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // PostgreSQL Session Store Configuration
-const sessionPool = new Pool({
-    user: dbConfig.username,
-    password: dbConfig.password,
-    host: dbConfig.host,
-    port: dbConfig.port,
-    database: dbConfig.database,
-    max: 5,
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 10000
-});
+// Support DATABASE_URL for Render/Heroku
+const sessionPool = process.env.DATABASE_URL
+    ? new Pool({
+        connectionString: process.env.DATABASE_URL,
+        ssl: process.env.NODE_ENV === 'production' ? {
+            require: true,
+            rejectUnauthorized: false
+        } : false,
+        max: 5,
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 10000
+    })
+    : new Pool({
+        user: dbConfig.username,
+        password: dbConfig.password,
+        host: dbConfig.host,
+        port: dbConfig.port,
+        database: dbConfig.database,
+        max: 5,
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 10000
+    });
 
 // Session configuration with PostgreSQL store
 app.use(session({
