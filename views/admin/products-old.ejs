@@ -1,0 +1,661 @@
+<% const title='Ürün Yönetimi' ; const pageTitle='Ürün Yönetimi' ; const activeMenu='products' ; %>
+    <%- include('../partials/admin_header') %>
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-box"></i> Ürünler</h5>
+                <button class="btn btn-light btn-sm" id="addProductBtn" data-bs-toggle="modal"
+                    data-bs-target="#productModal">
+                    <i class="fas fa-plus"></i> Yeni Ürün Ekle
+                </button>
+            </div>
+            <div class="card-body">
+                <!-- Search and Filter -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input type="text" class="form-control" id="searchInput"
+                                placeholder="Ürün adı veya kategori ile ara...">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="statusFilter">
+                            <option value="">Tüm Durumlar</option>
+                            <option value="active">Aktif</option>
+                            <option value="inactive">Pasif</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 text-end">
+                        <span class="badge bg-info" id="productCount">0 Ürün</span>
+                    </div>
+                </div>
+
+                <!-- Products Table -->
+                <div class="table-responsive">
+                    <table class="table table-hover" id="productsTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">ID</th>
+                                <th style="width: 100px;">Resim</th>
+                                <th>Ürün Adı</th>
+                                <th>Kategori</th>
+                                <th style="width: 100px;">Durum</th>
+                                <th style="width: 120px;">Tarih</th>
+                                <th style="width: 150px;">İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsBody">
+                            <tr>
+                                <td colspan="7" class="text-center">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Yükleniyor...</span>
+                                    </div>
+                                    <p class="mt-2">Ürünler yükleniyor...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Modal -->
+        <div class="modal fade" id="productModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTitle">Yeni Ürün Ekle</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form id="productForm" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <input type="hidden" id="productId" name="productId">
+
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Ürün Adı *</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Açıklama</label>
+                                <textarea class="form-control" id="description" name="description" rows="4"></textarea>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="category" class="form-label">Kategori</label>
+                                    <input type="text" class="form-control" id="category" name="category">
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="status" class="form-label">Durum</label>
+                                    <select class="form-select" id="status" name="status">
+                                        <option value="active">Aktif</option>
+                                        <option value="inactive">Pasif</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="images" class="form-label">Resimler (Çoklu seçim yapabilirsiniz)</label>
+                                <input type="file" class="form-control" id="images" name="images" multiple
+                                    accept="image/*" onchange="previewImages(this, 'imagePreview')">
+                                <div id="imagePreview" class="mt-2"></div>
+                            </div>
+
+                            <div id="existingImages" class="mb-3"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                            <button type="submit" class="btn btn-primary">Kaydet</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script src="/assets/js/products-admin.js"></script>
+
+        <%- include('../partials/admin_footer') %>
+
+            async function loadProducts() {
+                const tbody = document.getElementById('productsBody');
+                if (!tbody) {
+                    console.error('[LOAD PRODUCTS] productsBody not found!');
+                    return;
+                }
+
+                try {
+                    console.log('[LOAD PRODUCTS] ========== BAŞLADI ==========');
+                    console.log('[LOAD PRODUCTS] Sayfası yükleniyor...');
+                    console.log('[LOAD PRODUCTS] URL: /admin/api/products');
+
+                    // Show loading state
+                    tbody.innerHTML = `
+            <tr>
+                <td colspan="7" class="text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Yükleniyor...</span>
+                    </div>
+                    <p class="mt-2">Ürünler yükleniyor...</p>
+                </td>
+            </tr>
+            `;
+
+                    console.log('[LOAD PRODUCTS] Fetch çağrısı yapılıyor...');
+
+                    const response = await fetch('/admin/api/products', {
+                        method: 'GET',
+                        credentials: 'include',
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    console.log('[LOAD PRODUCTS] Response geldi!');
+                    console.log('[LOAD PRODUCTS] Response status:', response.status);
+                    console.log('[LOAD PRODUCTS] Response ok:', response.ok);
+
+                    // Check if redirected to login
+                    if (response.status === 401 || response.redirected || response.url.includes('/login')) {
+                        console.error('[LOAD PRODUCTS] ❌ 401 Unauthorized - redirecting to login');
+                        window.location.href = '/admin/login';
+                        return;
+                    }
+
+                    if (!response.ok) {
+                        const contentType = response.headers.get('content-type');
+                        let errorText = 'HTTP ' + response.status + ': ' + response.statusText;
+
+                        if (contentType && contentType.includes('application/json')) {
+                            try {
+                                const errorData = await response.json();
+                                errorText = errorData.message || errorText;
+                            } catch (e) {
+                                // JSON parse failed
+                            }
+                        } else {
+                            errorText = await response.text();
+                        }
+
+                        console.error('[LOAD PRODUCTS] ❌ Response not ok:', errorText);
+                        throw new Error(errorText);
+                    }
+
+                    const contentType = response.headers.get('content-type');
+                    if (!contentType || !contentType.includes('application/json')) {
+                        const text = await response.text();
+                        console.error('[LOAD PRODUCTS] ❌ Non-JSON response:', text.substring(0, 200));
+                        throw new Error('Beklenmeyen yanıt formatı: ' + text.substring(0, 100));
+                    }
+
+                    const data = await response.json();
+                    console.log('[LOAD PRODUCTS] ✅ Data alındı');
+                    console.log('[LOAD PRODUCTS] Data structure:', data);
+
+                    if (data && data.success) {
+                        products = data.products || [];
+                        console.log('[LOAD PRODUCTS] ✅ Toplam ürün sayısı:', products.length);
+                        console.log('[LOAD PRODUCTS] Product IDs:', products.map(p => p.id).join(', '));
+                        renderProducts();
+                        console.log('[LOAD PRODUCTS] ========== TAMAMLANDI ==========');
+                    } else {
+                        console.error('[LOAD PRODUCTS] ❌ Response success false:', data);
+                        tbody.innerHTML = `
+            <tr>
+                <td colspan="7" class="text-center text-danger">
+                    Ürünler yüklenirken hata oluştu: ${data?.message || 'Bilinmeyen hata'}
+                </td>
+            </tr>
+            `;
+                        showAlert('Ürünler yüklenirken hata oluştu: ' + (data?.message || 'Bilinmeyen hata'), 'danger');
+                    }
+                } catch (error) {
+                    console.error('[LOAD PRODUCTS] ❌ CATCH ERROR:', error);
+                    console.error('[LOAD PRODUCTS] Error message:', error.message);
+                    console.error('[LOAD PRODUCTS] Error stack:', error.stack);
+                    tbody.innerHTML = `
+            <tr>
+                <td colspan="7" class="text-center text-danger">
+                    <strong>Hata:</strong> ${error.message}
+                    <br>
+                    <small>Console'u kontrol edin (F12) daha fazla detay için.</small>
+                </td>
+            </tr>
+            `;
+                    showAlert('Ürünler yüklenirken hata oluştu: ' + error.message, 'danger');
+                }
+            }
+
+            function renderProducts(filteredProducts = null) {
+                const tbody = document.getElementById('productsBody');
+                const productsToRender = filteredProducts || products;
+
+                // Update count
+                const countElement = document.getElementById('productCount');
+                if (countElement) {
+                    countElement.textContent = productsToRender.length + ' Ürün';
+                }
+
+                if (productsToRender.length === 0) {
+                    tbody.innerHTML = `<tr>
+                <td colspan="7" class="text-center text-muted py-4"><i class="fas fa-box-open fa-2x mb-2"></i><br>Henüz ürün eklenmemiş.</td>
+            </tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = productsToRender.map(product => {
+                    const primaryImage = product.images?.find(img => img.is_primary) || product.images?.[0];
+                    const imageCount = product.images?.length || 0;
+                    const description = product.description ? (product.description.length > 50 ?
+                        product.description.substring(0, 50) + '...' : product.description) : '';
+
+                    return `
+            <tr class="product-row" data-product-id="${product.id}">
+                <td><strong>#${product.id}</strong></td>
+                <td>
+                    ${primaryImage ?
+                    '<img src="' + primaryImage.image_url + '" class="img-thumbnail view-product-image-btn"
+                        style="max-width: 60px; max-height: 60px; object-fit: cover; cursor: pointer;"
+                        data-product-id="' + product.id + '" title="' + imageCount + ' resim - Tıklayarak görüntüle">' :
+                    '<span class="text-muted"><i class="fas fa-image"></i> Yok</span>'
+                    }
+                    ${imageCount > 1 ? '<br><small class="text-muted">+' + (imageCount - 1) + ' resim</small>' : ''}
+                </td>
+                <td>
+                    <strong>${product.name}</strong>
+                    ${description ? '<br><small class="text-muted">' + description + '</small>' : ''}
+                </td>
+                <td>
+                    ${product.category ? '<span class="badge bg-secondary">' + product.category + '</span>' : '<span
+                        class="text-muted">-</span>'}
+                </td>
+                <td>
+                    <span class="badge bg-${product.status === 'active' ? 'success' : 'secondary'}">
+                        ${product.status === 'active' ? '<i class="fas fa-check-circle"></i> Aktif' : '<i
+                            class="fas fa-times-circle"></i> Pasif'}
+                    </span>
+                </td>
+                <td>
+                    <small>${new Date(product.created_at).toLocaleDateString('tr-TR')}</small><br>
+                    <small class="text-muted">${new Date(product.created_at).toLocaleTimeString('tr-TR', {hour:
+                        '2-digit', minute: '2-digit'})}</small>
+                </td>
+                <td>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button class="btn btn-primary edit-product-btn" data-product-id="${product.id}"
+                            title="Düzenle">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-info view-product-btn" data-product-id="${product.id}" title="Detaylar">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-danger delete-product-btn" data-product-id="${product.id}" title="Sil">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            `;
+            }).join('');
+            }
+
+            // Filter and search functions
+            function filterProducts() {
+            const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
+            const statusFilter = document.getElementById('statusFilter')?.value || '';
+
+            let filtered = products.filter(product => {
+            const matchesSearch = !searchTerm ||
+            product.name.toLowerCase().includes(searchTerm) ||
+            (product.category && product.category.toLowerCase().includes(searchTerm)) ||
+            (product.description && product.description.toLowerCase().includes(searchTerm));
+
+            const matchesStatus = !statusFilter || product.status === statusFilter;
+
+            return matchesSearch && matchesStatus;
+            });
+
+            renderProducts(filtered);
+            }
+
+            function viewProductImages(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product || !product.images || product.images.length === 0) {
+            showAlert('Bu ürünün resmi bulunmuyor.', 'warning');
+            return;
+            }
+
+            // Create modal for image gallery
+            const modalHtml = `
+            <div class="modal fade" id="imageGalleryModal" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">${product.name} - Resimler (${product.images.length})</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                ${product.images.map((img, index) => `
+                                <div class="col-md-4 mb-3">
+                                    <div class="card">
+                                        <img src="${img.image_url}" class="card-img-top"
+                                            style="height: 200px; object-fit: cover;">
+                                        <div class="card-body p-2">
+                                            <small class="text-muted">Resim ${index + 1}</small>
+                                            ${img.is_primary ? '<span class="badge bg-primary ms-2">Ana Resim</span>' :
+                                            ''}
+                                        </div>
+                                    </div>
+                                </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `;
+
+            // Remove existing modal if any
+            const existingModal = document.getElementById('imageGalleryModal');
+            if (existingModal) {
+            existingModal.remove();
+            }
+
+            // Add modal to body
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            const modal = new bootstrap.Modal(document.getElementById('imageGalleryModal'));
+            modal.show();
+
+            // Remove modal when hidden
+            document.getElementById('imageGalleryModal').addEventListener('hidden.bs.modal', function() {
+            this.remove();
+            });
+            }
+
+            function viewProductDetails(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) {
+            showAlert('Ürün bulunamadı.', 'danger');
+            return;
+            }
+
+            const detailsHtml = `
+            <div class="modal fade" id="productDetailsModal" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Ürün Detayları - #${product.id}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Ürün Bilgileri</h6>
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <th>ID:</th>
+                                            <td>#${product.id}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Ad:</th>
+                                            <td>${product.name}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Kategori:</th>
+                                            <td>${product.category || '-'}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Durum:</th>
+                                            <td><span
+                                                    class="badge bg-${product.status === 'active' ? 'success' : 'secondary'}">${product.status
+                                                    === 'active' ? 'Aktif' : 'Pasif'}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Oluşturulma:</th>
+                                            <td>${new Date(product.created_at).toLocaleString('tr-TR')}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Güncellenme:</th>
+                                            <td>${new Date(product.updated_at).toLocaleString('tr-TR')}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Açıklama</h6>
+                                    <p>${product.description || '<span class="text-muted">Açıklama yok</span>'}</p>
+                                    <h6>Resimler (${product.images?.length || 0})</h6>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        ${product.images?.map(img => `
+                                        <img src="${img.image_url}" class="img-thumbnail"
+                                            style="max-width: 100px; max-height: 100px; object-fit: cover;">
+                                        `).join('') || '<span class="text-muted">Resim yok</span>'}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary edit-from-details-btn"
+                                data-product-id="${product.id}">
+                                <i class="fas fa-edit"></i> Düzenle
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `;
+
+            // Remove existing modal if any
+            const existingModal = document.getElementById('productDetailsModal');
+            if (existingModal) {
+            existingModal.remove();
+            }
+
+            // Add modal to body
+            document.body.insertAdjacentHTML('beforeend', detailsHtml);
+            const modal = new bootstrap.Modal(document.getElementById('productDetailsModal'));
+            modal.show();
+
+            // Remove modal when hidden
+            document.getElementById('productDetailsModal').addEventListener('hidden.bs.modal', function() {
+            this.remove();
+            });
+            }
+
+            function openProductModal(id = null) {
+            document.getElementById('productForm').reset();
+            document.getElementById('productId').value = '';
+            document.getElementById('imagePreview').innerHTML = '';
+            document.getElementById('existingImages').innerHTML = '';
+            document.getElementById('modalTitle').textContent = 'Yeni Ürün Ekle';
+
+            if (id) {
+            const product = products.find(p => p.id === id);
+            if (product) {
+            document.getElementById('modalTitle').textContent = 'Ürün Düzenle';
+            document.getElementById('productId').value = product.id;
+            document.getElementById('name').value = product.name;
+            document.getElementById('description').value = product.description || '';
+            document.getElementById('category').value = product.category || '';
+            document.getElementById('status').value = product.status;
+
+            if (product.images && product.images.length > 0) {
+            const imagesHtml = product.images.map(img => `
+            <div class="d-inline-block position-relative m-2">
+                <img src="${img.image_url}" class="image-preview">
+                <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 delete-image-btn"
+                    data-image-id="${img.id}">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            `).join('');
+            document.getElementById('existingImages').innerHTML = '<label>Mevcut Resimler:</label><br>' + imagesHtml;
+            }
+            }
+            }
+            }
+
+            function editProduct(id) {
+            openProductModal(id);
+            new bootstrap.Modal(document.getElementById('productModal')).show();
+            }
+
+            async function deleteProduct(id) {
+            if (!confirmDelete('Bu ürünü silmek istediğinize emin misiniz?')) return;
+
+            try {
+            await fetchAPI('/admin/api/products/' + id, { method: 'DELETE' });
+            showAlert('Ürün başarıyla silindi!', 'success');
+            loadProducts();
+            } catch (error) {
+            console.error('Delete error:', error);
+            }
+            }
+
+            async function deleteImage(imageId) {
+            if (!confirmDelete('Bu resmi silmek istediğinize emin misiniz?')) return;
+
+            try {
+            await fetchAPI('/admin/api/product-images/' + imageId, { method: 'DELETE' });
+            showAlert('Resim başarıyla silindi!', 'success');
+            loadProducts();
+            document.getElementById('productModal').querySelector('.btn-close').click();
+            } catch (error) {
+            console.error('Delete image error:', error);
+            }
+            }
+
+            // Initialize all event listeners when DOM is ready
+            function initializeEventListeners() {
+            console.log('[PRODUCTS PAGE] Initializing event listeners...');
+
+            // Form submit event listener
+            const productForm = document.getElementById('productForm');
+            if (productForm) {
+            productForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const formData = new FormData(this);
+            const productId = document.getElementById('productId').value;
+            const url = productId ? '/admin/api/products/' + productId : '/admin/api/products';
+            const method = productId ? 'PUT' : 'POST';
+
+            try {
+            console.log('[PRODUCT FORM] Submitting:', { url, method, productId });
+
+            const response = await fetch(url, {
+            method: method,
+            credentials: 'include',
+            body: formData
+            });
+
+            console.log('[PRODUCT FORM] Response status:', response.status);
+
+            if (!response.ok) {
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Bir hata oluştu');
+            } else {
+            const errorText = await response.text();
+            throw new Error('HTTP ' + response.status + ': ' + errorText);
+            }
+            }
+
+            const data = await response.json();
+            console.log('[PRODUCT FORM] Response data:', data);
+
+            if (data.success) {
+            showAlert(data.message || 'İşlem başarılı!', 'success');
+            const modal = bootstrap.Modal.getInstance(document.getElementById('productModal'));
+            if (modal) modal.hide();
+            loadProducts();
+            } else {
+            showAlert(data.message || 'Bir hata oluştu!', 'danger');
+            }
+            } catch (error) {
+            console.error('[PRODUCT FORM] Save error:', error);
+            showAlert(error.message || 'Bir hata oluştu!', 'danger');
+            }
+            });
+            } else {
+            console.error('[PRODUCTS PAGE] productForm not found!');
+            }
+
+            // Event listener for add product button
+            const addProductBtn = document.getElementById('addProductBtn');
+            if (addProductBtn) {
+            addProductBtn.addEventListener('click', function() {
+            openProductModal();
+            });
+            }
+
+            // Event listeners for edit and delete buttons (delegated)
+            document.addEventListener('click', function(e) {
+            if (e.target.closest('.edit-product-btn')) {
+            const productId = parseInt(e.target.closest('.edit-product-btn').getAttribute('data-product-id'));
+            editProduct(productId);
+            }
+            if (e.target.closest('.view-product-btn')) {
+            const productId = parseInt(e.target.closest('.view-product-btn').getAttribute('data-product-id'));
+            viewProductDetails(productId);
+            }
+            if (e.target.closest('.delete-product-btn')) {
+            const productId = parseInt(e.target.closest('.delete-product-btn').getAttribute('data-product-id'));
+            deleteProduct(productId);
+            }
+            if (e.target.closest('.delete-image-btn')) {
+            const imageId = parseInt(e.target.closest('.delete-image-btn').getAttribute('data-image-id'));
+            deleteImage(imageId);
+            }
+            if (e.target.closest('.view-product-image-btn')) {
+            const productId = parseInt(e.target.closest('.view-product-image-btn').getAttribute('data-product-id'));
+            viewProductImages(productId);
+            }
+            if (e.target.closest('.edit-from-details-btn')) {
+            const productId = parseInt(e.target.closest('.edit-from-details-btn').getAttribute('data-product-id'));
+            const modal = bootstrap.Modal.getInstance(document.getElementById('productDetailsModal'));
+            if (modal) modal.hide();
+            editProduct(productId);
+            }
+            });
+
+            // Search and filter event listeners
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+            searchInput.addEventListener('input', filterProducts);
+            }
+
+            const statusFilter = document.getElementById('statusFilter');
+            if (statusFilter) {
+            statusFilter.addEventListener('change', filterProducts);
+            }
+
+            // Event listener for modal show event (when modal is opened)
+            const productModal = document.getElementById('productModal');
+            if (productModal) {
+            productModal.addEventListener('show.bs.modal', function() {
+            if (!document.getElementById('productId').value) {
+            openProductModal();
+            }
+            });
+            }
+
+            // Load products
+            console.log('[PRODUCTS PAGE] Loading products...');
+            loadProducts();
+            }
+
+            // Initialize when DOM is ready
+            if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeEventListeners);
+            } else {
+            initializeEventListeners();
+            }
+        </script>
+
+        <%- include('../partials/admin_footer') %>

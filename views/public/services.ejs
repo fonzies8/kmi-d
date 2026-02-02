@@ -1,0 +1,71 @@
+<% const pageTitle='Hizmetlerimiz' ; const activeMenu='services' ; const
+    description='Kartal Metal İş hizmetleri - Profesyonel metal işçiliği hizmetleri' ; %>
+    <%- include('../partials/public_header') %>
+
+        <div class="hero-section" style="padding: 60px 0;">
+            <div class="container">
+                <h1><i class="fas fa-wrench"></i> Hizmetlerimiz</h1>
+                <p>Profesyonel ve kaliteli hizmet anlayışı</p>
+            </div>
+        </div>
+
+        <section class="container my-5">
+            <div class="row">
+                <% if (typeof services !=='undefined' && services.length> 0) { %>
+                    <% services.forEach(service=> { %>
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="service-card card">
+                                <% if (service.images && service.images.length> 0) { %>
+                                    <% if (service.images.length> 1) { %>
+                                        <div class="image-carousel" id="service-carousel-<%= service.id %>">
+                                            <% service.images.forEach((image, imgIndex)=> { %>
+                                                <img src="<%= image.image_url %>"
+                                                    class="carousel-image <%= imgIndex === 0 ? 'active' : '' %>"
+                                                    alt="<%= service.name %>">
+                                                <% }) %>
+                                                    <div class="carousel-controls">
+                                                        <% service.images.forEach((_, imgIndex)=> { %>
+                                                            <div
+                                                                class="carousel-dot <%= imgIndex === 0 ? 'active' : '' %>">
+                                                            </div>
+                                                            <% }) %>
+                                                    </div>
+                                        </div>
+                                        <% } else { %>
+                                            <img src="<%= service.images[0].image_url %>" class="card-img-top"
+                                                alt="<%= service.name %>">
+                                            <% } %>
+                                                <% } else { %>
+                                                    <div class="card-img-top bg-secondary text-white d-flex align-items-center justify-content-center"
+                                                        style="height: 250px;">
+                                                        <i class="fas fa-wrench fa-3x"></i>
+                                                    </div>
+                                                    <% } %>
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">
+                                                                <%= service.name %>
+                                                            </h5>
+                                                            <p class="card-text">
+                                                                <%= service.short_description ||
+                                                                    service.description?.substring(0, 150) || '' %>
+                                                            </p>
+                                                            <a href="/service/<%= service.id %>"
+                                                                class="btn btn-primary btn-sm">
+                                                                <i class="fas fa-arrow-right"></i> Detayları Gör
+                                                            </a>
+                                                        </div>
+                            </div>
+                        </div>
+
+                        <% }) %>
+                            <% } else { %>
+                                <div class="col-12 text-center py-5">
+                                    <i class="fas fa-wrench fa-5x text-muted mb-3"></i>
+                                    <h3 class="text-muted">Henüz hizmet eklenmemiş</h3>
+                                    <p>Yakında hizmetlerimizi burada görebileceksiniz.</p>
+                                </div>
+                                <% } %>
+            </div>
+        </section>
+
+        <%- include('../partials/public_footer') %>

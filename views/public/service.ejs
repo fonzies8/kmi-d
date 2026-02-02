@@ -1,0 +1,98 @@
+<% const pageTitle=typeof service !=='undefined' ? service.name : 'Hizmet Detayı' ; const activeMenu='services' ; const
+    description=typeof service !=='undefined' && service.description ? service.description.substring(0, 160) : '' ; %>
+    <%- include('../partials/public_header') %>
+
+        <section class="container my-5">
+            <% if (typeof service !=='undefined' ) { %>
+                <div class="row">
+                    <div class="col-lg-6 mb-4">
+                        <% if (service.images && service.images.length> 0) { %>
+                            <div id="serviceImageCarousel" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-indicators">
+                                    <% service.images.forEach((_, index)=> { %>
+                                        <button type="button" data-bs-target="#serviceImageCarousel"
+                                            data-bs-slide-to="<%= index %>"
+                                            class="<%= index === 0 ? 'active' : '' %>"></button>
+                                        <% }) %>
+                                </div>
+                                <div class="carousel-inner">
+                                    <% service.images.forEach((image, index)=> { %>
+                                        <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                            <img src="<%= image.image_url %>" class="d-block w-100"
+                                                style="max-height: 500px; object-fit: cover; border-radius: 10px;"
+                                                alt="<%= service.name %>">
+                                        </div>
+                                        <% }) %>
+                                </div>
+                                <% if (service.images.length> 1) { %>
+                                    <button class="carousel-control-prev" type="button"
+                                        data-bs-target="#serviceImageCarousel" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon"></span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button"
+                                        data-bs-target="#serviceImageCarousel" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon"></span>
+                                    </button>
+                                    <% } %>
+                            </div>
+                            <% } else { %>
+                                <div class="bg-secondary text-white d-flex align-items-center justify-content-center"
+                                    style="height: 500px; border-radius: 10px;">
+                                    <i class="fas fa-image fa-5x"></i>
+                                </div>
+                                <% } %>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <h1 class="mb-3">
+                            <%= service.name %>
+                        </h1>
+
+                        <% if (service.category) { %>
+                            <p class="text-muted">
+                                <i class="fas fa-tag"></i> Kategori: <strong>
+                                    <%= service.category %>
+                                </strong>
+                            </p>
+                            <% } %>
+
+                                <hr>
+
+                                <div class="mb-4">
+                                    <h5>Hizmet Açıklaması</h5>
+                                    <p>
+                                        <%= service.description || 'Açıklama bulunmuyor.' %>
+                                    </p>
+                                </div>
+
+                                <% if (service.features) { %>
+                                    <div class="mb-4">
+                                        <h5>Özellikler</h5>
+                                        <p>
+                                            <%= service.features %>
+                                        </p>
+                                    </div>
+                                    <% } %>
+
+                                        <div class="d-grid gap-2">
+                                            <a href="/contact" class="btn btn-primary btn-lg">
+                                                <i class="fas fa-envelope"></i> Bilgi Al
+                                            </a>
+                                            <a href="/services" class="btn btn-outline-secondary">
+                                                <i class="fas fa-arrow-left"></i> Hizmetlere Dön
+                                            </a>
+                                        </div>
+                    </div>
+                </div>
+                <% } else { %>
+                    <div class="text-center py-5">
+                        <i class="fas fa-exclamation-triangle fa-5x text-warning mb-3"></i>
+                        <h3>Hizmet bulunamadı</h3>
+                        <a href="/services" class="btn btn-primary mt-3">
+                            <i class="fas fa-arrow-left"></i> Hizmetlere Dön
+                        </a>
+                    </div>
+                    <% } %>
+        </section>
+
+        <%- include('../partials/public_footer') %>

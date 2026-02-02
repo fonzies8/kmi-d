@@ -1,0 +1,218 @@
+<%- include('../partials/public_header', { title: 'İletişim - Kartal Metal İş' }) %>
+
+    <!-- Hero Section -->
+    <section class="hero-section"
+        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 100px 0; color: white;">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h1 class="display-4 fw-bold mb-3" data-aos="fade-up">İletişim</h1>
+                    <p class="lead" data-aos="fade-up" data-aos-delay="100">
+                        Bizimle iletişime geçmek için aşağıdaki bilgileri kullanabilirsiniz
+                    </p>
+                    <h3 class="mt-4" data-aos="fade-up" data-aos-delay="200">
+                        <i class="fas fa-phone-alt me-2"></i>
+                        <%= settings.contact_phone || '+90 (0) 599 399 2999' %>
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Info Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="0">
+                    <div class="card h-100 border-0 shadow-sm text-center">
+                        <div class="card-body p-4">
+                            <div class="icon-box bg-primary text-white rounded-circle p-3 d-inline-block mb-3">
+                                <i class="fas fa-phone-alt fa-2x"></i>
+                            </div>
+                            <h4>Numaramız</h4>
+                            <p class="text-muted">Bizi her zaman arayabilirsiniz</p>
+                            <a href="tel:<%= (settings.contact_phone || '+90 (0) 599 399 2999').replace(/\s/g, '') %>"
+                                class="text-decoration-none">
+                                <h5 class="text-primary mb-3">
+                                    <%= settings.contact_phone || '+90 (0) 599 399 2999' %>
+                                </h5>
+                            </a>
+                            <a href="mailto:<%= settings.contact_email || 'info@kartalmetal.com' %>"
+                                class="text-decoration-none">
+                                <i class="fas fa-envelope me-1"></i>
+                                <%= settings.contact_email || 'info@kartalmetal.com' %>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card h-100 border-0 shadow-sm text-center">
+                        <div class="card-body p-4">
+                            <div class="icon-box bg-success text-white rounded-circle p-3 d-inline-block mb-3">
+                                <i class="fas fa-map-marker-alt fa-2x"></i>
+                            </div>
+                            <h4>Adresimiz</h4>
+                            <a href="https://maps.app.goo.gl/v3iJFbEvdHdMFmf2A" target="_blank"
+                                class="text-decoration-none">
+                                <p class="text-muted mb-0" style="white-space: pre-line;">
+                                    <%= settings.contact_address || 'Kayseri\nİncesu\nMahalle\nSokak' %>
+                                </p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card h-100 border-0 shadow-sm text-center">
+                        <div class="card-body p-4">
+                            <div class="icon-box bg-info text-white rounded-circle p-3 d-inline-block mb-3">
+                                <i class="fas fa-truck fa-2x"></i>
+                            </div>
+                            <h4>Kargo Adresimiz</h4>
+                            <p class="text-muted mb-0" style="white-space: pre-line;">
+                                <%= settings.cargo_address || 'Kayseri\nİncesu\nMahalle\nSokak' %>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto" data-aos="fade-up">
+                    <div class="card border-0 shadow">
+                        <div class="card-body p-5">
+                            <h2 class="text-center mb-4">Bize Mesaj Gönderin</h2>
+                            <form id="contactForm">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="name" class="form-label">Adınız Soyadınız *</label>
+                                        <input type="text" class="form-control" id="name" name="name" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label">E-posta *</label>
+                                        <input type="email" class="form-control" id="email" name="email" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="phone" class="form-label">Telefon</label>
+                                        <input type="tel" class="form-control" id="phone" name="phone">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="subject" class="form-label">Konu *</label>
+                                        <input type="text" class="form-control" id="subject" name="subject" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="message" class="form-label">Mesajınız *</label>
+                                        <textarea class="form-control" id="message" name="message" rows="5"
+                                            required></textarea>
+                                    </div>
+                                    <div class="col-12 text-center">
+                                        <button type="submit" class="btn btn-primary btn-lg px-5">
+                                            <i class="fas fa-paper-plane me-2"></i>Gönder
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div id="formMessage" class="mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="py-0">
+        <div class="container-fluid p-0">
+            <div class="map-container" data-aos="fade-up"
+                style="position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+                <% if (settings.google_maps_embed) { %>
+                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                        <%- settings.google_maps_embed %>
+                    </div>
+                    <% } else { %>
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3117.1884278128737!2d35.18708827575896!3d38.62154606293381!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x152a55e739c417df%3A0x79deea0706f254a6!2zS0FSVEFMIE1FVEFMIMSwxZ4gLSBLQVJUQUwgVsSwTsOH!5e0!3m2!1str!2str!4v1768992924347!5m2!1str!2str"
+                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                        <% } %>
+            </div>
+        </div>
+    </section>
+    </div>
+    </div>
+    </section>
+
+    <!-- Working Hours Section -->
+    <% if (settings.working_hours) { %>
+        <section class="py-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 mx-auto" data-aos="fade-up">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body p-4 text-center">
+                                <h3 class="mb-4"><i class="fas fa-clock me-2 text-primary"></i>Çalışma Saatlerimiz</h3>
+                                <div class="row g-3">
+                                    <div class="col-6 text-end">
+                                        <p class="mb-2"><strong>Pazartesi - Cuma:</strong></p>
+                                    </div>
+                                    <div class="col-6 text-start">
+                                        <p class="mb-2 text-muted">
+                                            <%= settings.working_hours.weekdays || '08:00 - 18:00' %>
+                                        </p>
+                                    </div>
+                                    <div class="col-6 text-end">
+                                        <p class="mb-2"><strong>Cumartesi:</strong></p>
+                                    </div>
+                                    <div class="col-6 text-start">
+                                        <p class="mb-2 text-muted">
+                                            <%= settings.working_hours.saturday || '09:00 - 14:00' %>
+                                        </p>
+                                    </div>
+                                    <div class="col-6 text-end">
+                                        <p class="mb-0"><strong>Pazar:</strong></p>
+                                    </div>
+                                    <div class="col-6 text-start">
+                                        <p class="mb-0 text-muted">
+                                            <%= settings.working_hours.sunday || 'Kapalı' %>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <% } %>
+
+            <script>
+                document.getElementById('contactForm').addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    const formData = new FormData(this);
+                    const messageDiv = document.getElementById('formMessage');
+
+                    // Simulate form submission (you can add actual backend endpoint later)
+                    messageDiv.innerHTML = `
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            <strong>Teşekkürler!</strong> Mesajınız başarıyla gönderildi. En kısa sürede size dönüş yapacağız.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+
+                    this.reset();
+
+                    // Scroll to message
+                    messageDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                });
+            </script>
+
+            <%- include('../partials/public_footer') %>

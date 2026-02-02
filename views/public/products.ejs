@@ -1,0 +1,72 @@
+<% 
+const pageTitle = 'Ürünlerimiz';
+const activeMenu = 'products';
+const description = 'Kartal Metal İş ürünleri - Kaliteli metal ürünler';
+%>
+<%- include('../partials/public_header') %>
+
+<div class="hero-section" style="padding: 60px 0;">
+    <div class="container">
+        <h1><i class="fas fa-box"></i> Ürünlerimiz</h1>
+        <p>Kaliteli ve dayanıklı metal ürünler</p>
+    </div>
+</div>
+
+<section class="container my-5">
+    <div class="row">
+        <% if (typeof products !== 'undefined' && products.length > 0) { %>
+            <% products.forEach(product => { %>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="product-card card">
+                        <% if (product.images && product.images.length > 0) { %>
+                            <% if (product.images.length > 1) { %>
+                                <div class="image-carousel" id="product-carousel-<%= product.id %>">
+                                    <% product.images.forEach((image, imgIndex) => { %>
+                                        <img src="<%= image.image_url %>" 
+                                             class="carousel-image <%= imgIndex === 0 ? 'active' : '' %>" 
+                                             alt="<%= product.name %>">
+                                    <% }) %>
+                                    <div class="carousel-controls">
+                                        <% product.images.forEach((_, imgIndex) => { %>
+                                            <div class="carousel-dot <%= imgIndex === 0 ? 'active' : '' %>"></div>
+                                        <% }) %>
+                                    </div>
+                                </div>
+                            <% } else { %>
+                                <img src="<%= product.images[0].image_url %>" 
+                                     class="card-img-top" 
+                                     alt="<%= product.name %>">
+                            <% } %>
+                        <% } else { %>
+                            <div class="card-img-top bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 250px;">
+                                <i class="fas fa-image fa-3x"></i>
+                            </div>
+                        <% } %>
+                        <div class="card-body">
+                            <h5 class="card-title"><%= product.name %></h5>
+                            <% if (product.category) { %>
+                                <p class="text-muted small">
+                                    <i class="fas fa-tag"></i> <%= product.category %>
+                                </p>
+                            <% } %>
+                            <p class="card-text">
+                                <%= product.description ? product.description.substring(0, 150) + '...' : '' %>
+                            </p>
+                            <a href="/product/<%= product.id %>" class="btn btn-primary">
+                                <i class="fas fa-info-circle"></i> Detayları Görüntüle
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-box-open fa-5x text-muted mb-3"></i>
+                <h3 class="text-muted">Henüz ürün eklenmemiş</h3>
+                <p>Yakında ürünlerimizi burada görebileceksiniz.</p>
+            </div>
+        <% } %>
+    </div>
+</section>
+
+<%- include('../partials/public_footer') %>

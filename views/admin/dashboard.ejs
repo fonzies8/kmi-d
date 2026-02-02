@@ -1,0 +1,124 @@
+<% 
+const title = 'Dashboard';
+const pageTitle = 'Dashboard';
+const activeMenu = 'dashboard';
+%>
+<%- include('../partials/admin_header') %>
+
+<div class="row">
+    <div class="col-md-3 col-sm-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-2">Toplam Ürün</h6>
+                        <h2 class="mb-0"><%= typeof stats !== 'undefined' ? stats.products : 0 %></h2>
+                    </div>
+                    <div class="text-primary" style="font-size: 3rem; opacity: 0.3;">
+                        <i class="fas fa-box"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-2">Aktif Ürün</h6>
+                        <h2 class="mb-0"><%= typeof stats !== 'undefined' ? stats.activeProducts : 0 %></h2>
+                    </div>
+                    <div class="text-success" style="font-size: 3rem; opacity: 0.3;">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-2">Toplam Hizmet</h6>
+                        <h2 class="mb-0"><%= typeof stats !== 'undefined' ? stats.services : 0 %></h2>
+                    </div>
+                    <div class="text-warning" style="font-size: 3rem; opacity: 0.3;">
+                        <i class="fas fa-wrench"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-2">Ana Sayfa Kartları</h6>
+                        <h2 class="mb-0"><%= typeof stats !== 'undefined' ? stats.cards : 0 %></h2>
+                    </div>
+                    <div class="text-info" style="font-size: 3rem; opacity: 0.3;">
+                        <i class="fas fa-home"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-info-circle"></i> Hoş Geldiniz</h5>
+            </div>
+            <div class="card-body">
+                <h5>Merhaba, <%= typeof user !== 'undefined' && user ? user.username : 'Admin' %>!</h5>
+                <p class="text-muted">Kartal Metal İş admin paneline hoş geldiniz. Buradan sitenizi yönetebilirsiniz.</p>
+                
+                <hr>
+                
+                <h6 class="mb-3">Hızlı İşlemler:</h6>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="/admin/products" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Yeni Ürün Ekle
+                    </a>
+                    <a href="/admin/services" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Yeni Hizmet Ekle
+                    </a>
+                    <a href="/admin/homepage" class="btn btn-info">
+                        <i class="fas fa-edit"></i> Ana Sayfayı Düzenle
+                    </a>
+                    <a href="/" target="_blank" class="btn btn-secondary">
+                        <i class="fas fa-external-link-alt"></i> Siteyi Görüntüle
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-user"></i> Profil Bilgileri</h5>
+            </div>
+            <div class="card-body">
+                <% if (typeof user !== 'undefined' && user) { %>
+                    <p><strong>Kullanıcı Adı:</strong><br><%= user.username %></p>
+                    <p><strong>E-posta:</strong><br><%= user.email %></p>
+                    <hr>
+                    <a href="/admin/settings" class="btn btn-sm btn-outline-primary w-100">
+                        <i class="fas fa-cog"></i> Ayarlar
+                    </a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/admin_footer') %>

@@ -1,0 +1,126 @@
+<% const title='Ana Sayfa Yönetimi' ; const pageTitle='Ana Sayfa Yönetimi' ; const activeMenu='homepage' ; %>
+    <%- include('../partials/admin_header') %>
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-home"></i> Ana Sayfa Kartları</h5>
+                <button class="btn btn-light btn-sm" id="addCardBtn" data-bs-toggle="modal" data-bs-target="#cardModal">
+                    <i class="fas fa-plus"></i> Yeni Kart Ekle
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="row" id="cardsContainer">
+                    <div class="col-12 text-center">Yükleniyor...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Modal -->
+        <div class="modal fade" id="cardModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTitle">Yeni Kart Ekle</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form id="cardForm" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <input type="hidden" id="cardId" name="cardId">
+
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Başlık *</label>
+                                <input type="text" class="form-control" id="title" name="title" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="type" class="form-label">Kart Tipi</label>
+                                <select class="form-select" id="type" name="type">
+                                    <option value="feature">Özellik</option>
+                                    <option value="cta">Çağrı-Harekete Geçiş (CTA)</option>
+                                    <option value="stats">İstatistik</option>
+                                    <option value="testimonial">Müşteri Yorumu</option>
+                                    <option value="custom">Özel</option>
+                                </select>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="icon" class="form-label">
+                                        <i class="fas fa-icon"></i> Font Awesome Icon
+                                    </label>
+                                    <input type="text" class="form-control" id="icon" name="icon"
+                                        placeholder="Örn: fas fa-wrench">
+                                    <small class="text-muted">Font Awesome class'ı giriniz</small>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="background_color" class="form-label">Arka Plan Rengi</label>
+                                    <select class="form-select" id="background_color" name="background_color">
+                                        <option value="">Varsayılan</option>
+                                        <option value="primary">Mavi (Primary)</option>
+                                        <option value="success">Yeşil (Success)</option>
+                                        <option value="info">Cyan (Info)</option>
+                                        <option value="warning">Turuncu (Warning)</option>
+                                        <option value="danger">Kırmızı (Danger)</option>
+                                        <option value="light">Açık (Light)</option>
+                                        <option value="dark">Koyu (Dark)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="content" class="form-label">İçerik</label>
+                                <textarea class="form-control" id="content" name="content" rows="4"></textarea>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-8 mb-3">
+                                    <label for="link_url" class="form-label">Link URL</label>
+                                    <input type="url" class="form-control" id="link_url" name="link_url">
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label for="link_text" class="form-label">Link Metni</label>
+                                    <input type="text" class="form-control" id="link_text" name="link_text">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="status" class="form-label">Durum</label>
+                                    <select class="form-select" id="status" name="status">
+                                        <option value="active">Aktif</option>
+                                        <option value="inactive">Pasif</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="highlight" class="form-label">
+                                        <input type="checkbox" id="highlight" name="highlight" value="on">
+                                        Öne Çıkan Kart Olarak Göster
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="images" class="form-label">Resimler (Çoklu seçim yapabilirsiniz)</label>
+                                <input type="file" class="form-control" id="images" name="images" multiple
+                                    accept="image/*" onchange="previewImages(this, 'imagePreview')">
+                                <div id="imagePreview" class="mt-2"></div>
+                            </div>
+
+                            <div id="existingImages" class="mb-3"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                            <button type="submit" class="btn btn-primary">Kaydet</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        </div>
+        </div>
+
+        <script src="/js/homepage-admin.js"></script>
+
+        <%- include('../partials/admin_footer') %>

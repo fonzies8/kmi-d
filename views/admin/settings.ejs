@@ -1,0 +1,239 @@
+<% const pageTitle='Site Ayarları' ; const activeMenu='settings' ; %>
+    <%- include('../partials/admin_header') %>
+
+        <div class="container-fluid py-4">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h2><i class="fas fa-cog me-2"></i>Site Ayarları</h2>
+                    <p class="text-muted">Site genelindeki bilgileri buradan yönetebilirsiniz</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <!-- Tabs -->
+                            <ul class="nav nav-tabs mb-4" id="settingsTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="general-tab" data-bs-toggle="tab"
+                                        data-bs-target="#general" type="button">
+                                        <i class="fas fa-info-circle me-1"></i> Genel Ayarlar
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
+                                        data-bs-target="#contact" type="button">
+                                        <i class="fas fa-phone me-1"></i> İletişim Bilgileri
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="about-tab" data-bs-toggle="tab" data-bs-target="#about"
+                                        type="button">
+                                        <i class="fas fa-building me-1"></i> Hakkımızda
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="social-tab" data-bs-toggle="tab"
+                                        data-bs-target="#social" type="button">
+                                        <i class="fas fa-share-alt me-1"></i> Sosyal Medya
+                                    </button>
+                                </li>
+                            </ul>
+
+                            <!-- Tab Content -->
+                            <div class="tab-content" id="settingsTabContent">
+                                <!-- General Settings -->
+                                <div class="tab-pane fade show active" id="general">
+                                    <form id="generalForm">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="site_title" class="form-label">Site Başlığı</label>
+                                                <input type="text" class="form-control" id="site_title"
+                                                    name="site_title">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="site_description" class="form-label">Site Açıklaması</label>
+                                                <input type="text" class="form-control" id="site_description"
+                                                    name="site_description">
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save me-1"></i> Kaydet
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <!-- Contact Settings -->
+                                <div class="tab-pane fade" id="contact">
+                                    <form id="contactForm">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="contact_phone" class="form-label">
+                                                    <i class="fas fa-phone me-1"></i> Telefon
+                                                </label>
+                                                <input type="text" class="form-control" id="contact_phone"
+                                                    name="contact_phone">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="contact_email" class="form-label">
+                                                    <i class="fas fa-envelope me-1"></i> E-posta
+                                                </label>
+                                                <input type="email" class="form-control" id="contact_email"
+                                                    name="contact_email">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="contact_address" class="form-label">
+                                                    <i class="fas fa-map-marker-alt me-1"></i> Adres
+                                                </label>
+                                                <textarea class="form-control" id="contact_address"
+                                                    name="contact_address" rows="3"></textarea>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="cargo_address" class="form-label">
+                                                    <i class="fas fa-truck me-1"></i> Kargo Adresi
+                                                </label>
+                                                <textarea class="form-control" id="cargo_address" name="cargo_address"
+                                                    rows="3"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <h5 class="mt-4 mb-3">Çalışma Saatleri</h5>
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3">
+                                                <label for="working_hours_weekdays" class="form-label">Hafta İçi</label>
+                                                <input type="text" class="form-control" id="working_hours_weekdays"
+                                                    placeholder="08:00 - 18:00">
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="working_hours_saturday" class="form-label">Cumartesi</label>
+                                                <input type="text" class="form-control" id="working_hours_saturday"
+                                                    placeholder="09:00 - 14:00">
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for="working_hours_sunday" class="form-label">Pazar</label>
+                                                <input type="text" class="form-control" id="working_hours_sunday"
+                                                    placeholder="Kapalı">
+                                            </div>
+                                        </div>
+
+                                        <h5 class="mt-4 mb-3">Google Harita</h5>
+                                        <div class="mb-3">
+                                            <label for="google_maps_embed" class="form-label">
+                                                <i class="fas fa-map me-1"></i> Google Maps Embed Kodu
+                                            </label>
+                                            <textarea class="form-control" id="google_maps_embed"
+                                                name="google_maps_embed" rows="4"
+                                                placeholder="&lt;iframe src=&quot;https://www.google.com/maps/...&quot;&gt;&lt;/iframe&gt;"></textarea>
+                                            <small class="form-text text-muted d-block mt-2">
+                                                Google Maps'den embed kodunu kopyalayıp yapıştırın
+                                            </small>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save me-1"></i> Kaydet
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <!-- About Settings -->
+                                <div class="tab-pane fade" id="about">
+                                    <form id="aboutForm">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="about_mission" class="form-label">
+                                                    <i class="fas fa-bullseye me-1"></i> Misyon
+                                                </label>
+                                                <textarea class="form-control" id="about_mission" name="about_mission"
+                                                    rows="4"></textarea>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="about_vision" class="form-label">
+                                                    <i class="fas fa-eye me-1"></i> Vizyon
+                                                </label>
+                                                <textarea class="form-control" id="about_vision" name="about_vision"
+                                                    rows="4"></textarea>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="about_content_1" class="form-label">İçerik 1</label>
+                                                <textarea class="form-control" id="about_content_1"
+                                                    name="about_content_1" rows="4"></textarea>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="about_content_2" class="form-label">İçerik 2</label>
+                                                <textarea class="form-control" id="about_content_2"
+                                                    name="about_content_2" rows="4"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <h5 class="mt-4 mb-3">Hakkımızda Resimleri</h5>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="about_image_1_file" class="form-label">Resim 1</label>
+                                                <input type="file" class="form-control" id="about_image_1_file"
+                                                    accept="image/*" onchange="uploadAboutImage('about_image_1', this)">
+                                                <div id="about_image_1_preview" class="mt-2"></div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="about_image_2_file" class="form-label">Resim 2</label>
+                                                <input type="file" class="form-control" id="about_image_2_file"
+                                                    accept="image/*" onchange="uploadAboutImage('about_image_2', this)">
+                                                <div id="about_image_2_preview" class="mt-2"></div>
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save me-1"></i> Kaydet
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <!-- Social Media Settings -->
+                                <div class="tab-pane fade" id="social">
+                                    <form id="socialForm">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="social_facebook" class="form-label">
+                                                    <i class="fab fa-facebook me-1"></i> Facebook
+                                                </label>
+                                                <input type="text" class="form-control" id="social_facebook"
+                                                    placeholder="https://facebook.com/...">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="social_twitter" class="form-label">
+                                                    <i class="fab fa-twitter me-1"></i> Twitter
+                                                </label>
+                                                <input type="text" class="form-control" id="social_twitter"
+                                                    placeholder="https://twitter.com/...">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="social_instagram" class="form-label">
+                                                    <i class="fab fa-instagram me-1"></i> Instagram
+                                                </label>
+                                                <input type="text" class="form-control" id="social_instagram"
+                                                    placeholder="https://instagram.com/...">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="social_linkedin" class="form-label">
+                                                    <i class="fab fa-linkedin me-1"></i> LinkedIn
+                                                </label>
+                                                <input type="text" class="form-control" id="social_linkedin"
+                                                    placeholder="https://linkedin.com/...">
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save me-1"></i> Kaydet
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="/js/settings-admin.js"></script>
+
+        <%- include('../partials/admin_footer') %>

@@ -1,0 +1,149 @@
+<% const title='Test & Debug' ; const pageTitle='Test & Debug' ; const activeMenu='test' ; %>
+    <%- include('../partials/admin_header') %>
+
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-vial"></i> Test & Debug Paneli</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Bu sayfa veritabanı bağlantısını, API endpoint'lerini ve veri akışını test etmek
+                    için kullanılır.</p>
+            </div>
+        </div>
+
+        <!-- Test Buttons -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-play-circle"></i> Test İşlemleri</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 mb-2">
+                                <button class="btn btn-primary w-100" id="testDbBtn">
+                                    <i class="fas fa-database"></i> Veritabanı Bağlantısı
+                                </button>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <button class="btn btn-success w-100" id="testProductsBtn">
+                                    <i class="fas fa-box"></i> Ürünleri Test Et
+                                </button>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <button class="btn btn-info w-100" id="testServicesBtn">
+                                    <i class="fas fa-wrench"></i> Hizmetleri Test Et
+                                </button>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <button class="btn btn-warning w-100" id="testSessionBtn">
+                                    <i class="fas fa-user-shield"></i> Session Bilgisi
+                                </button>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <button class="btn btn-outline-success w-100" id="createTestProductBtn">
+                                    <i class="fas fa-plus-circle"></i> Test Ürünü Oluştur
+                                </button>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <button class="btn btn-outline-info w-100" id="createTestServiceBtn">
+                                    <i class="fas fa-plus-circle"></i> Test Hizmeti Oluştur
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SQL Query Editor -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h6 class="mb-0"><i class="fas fa-code"></i> SQL Sorgu Çalıştırıcı</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Dikkat:</strong> SQL sorgularını dikkatli kullanın. DROP, ALTER ve TRUNCATE
+                            sorguları güvenlik nedeniyle engellenmiştir.
+                        </div>
+
+                        <!-- SQL Query Input -->
+                        <div class="mb-3">
+                            <label for="sqlQuery" class="form-label">SQL Sorgusu:</label>
+                            <textarea class="form-control font-monospace" id="sqlQuery" rows="8"
+                                placeholder="SQL sorgunuzu buraya yazın..." style="font-size: 14px;"></textarea>
+                        </div>
+
+                        <!-- Quick Examples -->
+                        <div class="mb-3">
+                            <label class="form-label">Hızlı Örnekler:</label>
+                            <div class="btn-group-vertical w-100" role="group">
+                                <button type="button" class="btn btn-sm btn-outline-primary sql-example-btn mb-1"
+                                    data-example="SELECT">
+                                    <i class="fas fa-search"></i> SELECT - Tüm Ürünleri Listele
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-success sql-example-btn mb-1"
+                                    data-example="INSERT">
+                                    <i class="fas fa-plus"></i> INSERT - Yeni Ürün Ekle
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-warning sql-example-btn mb-1"
+                                    data-example="UPDATE">
+                                    <i class="fas fa-edit"></i> UPDATE - Ürün Güncelle
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-danger sql-example-btn mb-1"
+                                    data-example="DELETE">
+                                    <i class="fas fa-trash"></i> DELETE - Ürün Sil
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-info sql-example-btn mb-1"
+                                    data-example="COUNT">
+                                    <i class="fas fa-calculator"></i> COUNT - Kayıt Sayısı
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary sql-example-btn mb-1"
+                                    data-example="JOIN">
+                                    <i class="fas fa-link"></i> JOIN - Ürünler ve Resimler
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Execute Button -->
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-primary" id="executeSQLBtn">
+                                <i class="fas fa-play"></i> SQL Sorgusunu Çalıştır
+                            </button>
+                            <button class="btn btn-secondary" id="clearSQLBtn">
+                                <i class="fas fa-eraser"></i> Temizle
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Area -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0"><i class="fas fa-list"></i> Test Sonuçları</h6>
+                        <button class="btn btn-sm btn-secondary" id="clearResultsBtn">
+                            <i class="fas fa-trash"></i> Temizle
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="testResults" style="max-height: 600px; overflow-y: auto;">
+                            <p class="text-muted text-center">Test sonuçları burada görünecek...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="/js/test-admin.js"></script>
+
+        <%- include('../partials/admin_footer') %>

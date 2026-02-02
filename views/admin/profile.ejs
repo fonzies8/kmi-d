@@ -1,0 +1,245 @@
+<% const pageTitle='Profil' ; const activeMenu='profile' ; %>
+    <%- include('../partials/admin_header') %>
+
+        <div class="container-fluid py-4">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h2><i class="fas fa-user-circle me-2"></i>Profil Bilgileri</h2>
+                    <p class="text-muted">Hesap bilgilerinizi ve şifrenizi yönetebilirsiniz</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <!-- Tabs -->
+                            <ul class="nav nav-tabs mb-4" id="profileTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="user-info-tab" data-bs-toggle="tab"
+                                        data-bs-target="#user-info" type="button">
+                                        <i class="fas fa-info-circle me-1"></i> Kullanıcı Bilgileri
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="password-tab" data-bs-toggle="tab"
+                                        data-bs-target="#password" type="button">
+                                        <i class="fas fa-key me-1"></i> Şifre Değiştir
+                                    </button>
+                                </li>
+                            </ul>
+
+                            <!-- Tab Content -->
+                            <div class="tab-content" id="profileTabContent">
+                                <!-- User Info Tab -->
+                                <div class="tab-pane fade show active" id="user-info">
+                                    <form id="userInfoForm">
+                                        <div class="mb-3">
+                                            <label for="username" class="form-label">
+                                                <i class="fas fa-user me-1"></i> Kullanıcı Adı
+                                            </label>
+                                            <input type="text" class="form-control" id="username" name="username"
+                                                readonly>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">
+                                                <i class="fas fa-envelope me-1"></i> E-posta
+                                            </label>
+                                            <input type="email" class="form-control" id="email" name="email" required>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save me-1"></i> Kaydet
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <!-- Password Tab -->
+                                <div class="tab-pane fade" id="password">
+                                    <form id="passwordForm">
+                                        <div class="mb-3">
+                                            <label for="currentPassword" class="form-label">
+                                                <i class="fas fa-lock me-1"></i> Mevcut Şifre
+                                            </label>
+                                            <input type="password" class="form-control" id="currentPassword"
+                                                name="currentPassword" required>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="newPassword" class="form-label">
+                                                <i class="fas fa-key me-1"></i> Yeni Şifre
+                                            </label>
+                                            <input type="password" class="form-control" id="newPassword"
+                                                name="newPassword" required>
+                                            <small class="text-muted d-block mt-1">
+                                                En az 6 karakter uzunluğunda olmalıdır
+                                            </small>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="confirmPassword" class="form-label">
+                                                <i class="fas fa-key me-1"></i> Yeni Şifre Tekrar
+                                            </label>
+                                            <input type="password" class="form-control" id="confirmPassword"
+                                                name="confirmPassword" required>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save me-1"></i> Şifre Değiştir
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alert Messages -->
+                    <div id="alertContainer" class="mt-3"></div>
+                </div>
+
+                <!-- Info Card -->
+                <div class="col-lg-4">
+                    <div class="card shadow-sm bg-light">
+                        <div class="card-body text-center">
+                            <div class="icon-box bg-primary text-white rounded-circle p-4 d-inline-block mb-3">
+                                <i class="fas fa-user-circle fa-3x"></i>
+                            </div>
+                            <h5>
+                                <%= user.username %>
+                            </h5>
+                            <p class="text-muted">
+                                <%= user.email %>
+                            </p>
+                            <hr>
+                            <p class="text-muted small mb-0">
+                                <i class="fas fa-shield-alt me-1"></i> Admin Kullanıcı
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Load user info on page load
+            document.addEventListener('DOMContentLoaded', function () {
+                fetch('/admin/api/profile', {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.user) {
+                            document.getElementById('username').value = data.user.username || '';
+                            document.getElementById('email').value = data.user.email || '';
+                        }
+                    })
+                    .catch(error => console.error('Error loading profile:', error));
+            });
+
+            // Handle user info form submit
+            document.getElementById('userInfoForm').addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const email = document.getElementById('email').value.trim();
+
+                if (!email) {
+                    showAlert('Lütfen e-posta adresini giriniz.', 'warning');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/admin/api/profile/update', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        showAlert('Profil bilgileri başarıyla güncellendi!', 'success');
+                    } else {
+                        showAlert(data.message || 'Bir hata oluştu.', 'danger');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showAlert('Profil güncellenirken hata oluştu.', 'danger');
+                }
+            });
+
+            // Handle password form submit
+            document.getElementById('passwordForm').addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                // Validation
+                if (!currentPassword || !newPassword || !confirmPassword) {
+                    showAlert('Lütfen tüm alanları doldurunuz.', 'warning');
+                    return;
+                }
+
+                if (newPassword.length < 6) {
+                    showAlert('Yeni şifre en az 6 karakter uzunluğunda olmalıdır.', 'warning');
+                    return;
+                }
+
+                if (newPassword !== confirmPassword) {
+                    showAlert('Yeni şifreler eşleşmemektedir.', 'warning');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/admin/api/profile/change-password', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            currentPassword,
+                            newPassword
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        showAlert('Şifre başarıyla değiştirildi!', 'success');
+                        document.getElementById('passwordForm').reset();
+                    } else {
+                        showAlert(data.message || 'Bir hata oluştu.', 'danger');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showAlert('Şifre değiştirilirken hata oluştu.', 'danger');
+                }
+            });
+
+            function showAlert(message, type = 'info') {
+                const alertContainer = document.getElementById('alertContainer');
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+                alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+                alertContainer.innerHTML = '';
+                alertContainer.appendChild(alertDiv);
+
+                // Auto dismiss after 5 seconds
+                setTimeout(() => {
+                    if (alertDiv.parentElement) {
+                        alertDiv.remove();
+                    }
+                }, 5000);
+            }
+        </script>
+
+        <%- include('../partials/admin_footer') %>

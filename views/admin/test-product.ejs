@@ -1,0 +1,80 @@
+<% const title='Test - Ürün Ekleme' ; const pageTitle='Test - Ürün Ekleme' ; const activeMenu='test-product' ; %>
+    <%- include('../partials/admin_header') %>
+
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="fas fa-flask"></i> Test Sayfası - Ürün Ekleme</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> Bu sayfa sadece test amaçlıdır. Veritabanına veri ekleyip
+                    ekleyemediğinizi test edebilirsiniz.
+                </div>
+
+                <!-- Session Check -->
+                <div class="alert alert-secondary mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-user-shield"></i> Session Durumu:</span>
+                        <span id="sessionStatus" class="badge bg-secondary">Kontrol ediliyor...</span>
+                    </div>
+                </div>
+
+                <form id="testProductForm" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="testProductName" class="form-label">Ürün Adı *</label>
+                                <input type="text" class="form-control" id="testProductName" name="name" required
+                                    placeholder="Örn: Test Ürün 1">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="testProductDescription" class="form-label">Açıklama</label>
+                                <textarea class="form-control" id="testProductDescription" name="description" rows="3"
+                                    placeholder="Ürün açıklaması..."></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="testProductCategory" class="form-label">Kategori</label>
+                                <input type="text" class="form-control" id="testProductCategory" name="category"
+                                    placeholder="Örn: Test Kategori">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="testProductImages" class="form-label">Resimler (Opsiyonel)</label>
+                                <input type="file" class="form-control" id="testProductImages" name="images" multiple
+                                    accept="image/*">
+                                <small class="text-muted">Birden fazla resim seçebilirsiniz</small>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-save"></i> Ürünü Kaydet
+                            </button>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-header">
+                                    <h6 class="mb-0"><i class="fas fa-info-circle"></i> Test Sonuçları</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div id="testResults" class="p-3">
+                                        <p class="text-muted text-center mb-0">Formu doldurup kaydet butonuna
+                                            tıklayın...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        </div>
+        </form>
+        </div>
+        </div>
+
+        <script src="/js/test-product-admin.js"></script>
+
+        <%- include('../partials/admin_footer') %>

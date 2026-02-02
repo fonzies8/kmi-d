@@ -1,0 +1,329 @@
+<% const pageTitle='Anasayfa' ; const activeMenu='home' ; const
+    description='Kartal Metal İş - Profesyonel kaynak, römork, vinç ve metal işçiliği hizmetleri' ; %>
+    <%- include('../partials/public_header') %>
+
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="container">
+                <h1><i class="fas fa-industry"></i> KARTAL METAL İŞ</h1>
+                <p class="lead">Kaliteli Metal İşçiliği ve Kaynak Hizmetleri</p>
+                <div class="mt-4">
+                    <a href="/products" class="btn btn-light btn-lg me-2">
+                        <i class="fas fa-box"></i> Ürünlerimiz
+                    </a>
+                    <a href="/services" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-wrench"></i> Hizmetlerimiz
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Products Section -->
+        <section class="container my-5">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Öne Çıkan Ürünlerimiz</h2>
+                <p class="section-subtitle">İşçiliğin Sanata Dönüştüğü Ürünlerimizi Keşfedin</p>
+            </div>
+
+            <div class="row">
+                <% if (typeof products !=='undefined' && products.length> 0) { %>
+                    <% products.forEach((product, index)=> { %>
+                        <div class="col-md-6 col-lg-3 mb-4">
+                            <div class="product-card card">
+                                <% if (product.images && product.images.length> 0) { %>
+                                    <% if (product.images.length> 1) { %>
+                                        <div class="image-carousel" id="product-carousel-<%= product.id %>">
+                                            <% product.images.forEach((image, imgIndex)=> { %>
+                                                <img src="<%= image.image_url %>"
+                                                    class="carousel-image <%= imgIndex === 0 ? 'active' : '' %>"
+                                                    alt="<%= product.name %>">
+                                                <% }) %>
+                                                    <div class="carousel-controls">
+                                                        <% product.images.forEach((_, imgIndex)=> { %>
+                                                            <div
+                                                                class="carousel-dot <%= imgIndex === 0 ? 'active' : '' %>">
+                                                            </div>
+                                                            <% }) %>
+                                                    </div>
+                                        </div>
+                                        <% } else { %>
+                                            <img src="<%= product.images[0].image_url %>" class="card-img-top"
+                                                alt="<%= product.name %>">
+                                            <% } %>
+                                                <% } else { %>
+                                                    <div class="card-img-top bg-secondary text-white d-flex align-items-center justify-content-center"
+                                                        style="height: 250px;">
+                                                        <i class="fas fa-image fa-3x"></i>
+                                                    </div>
+                                                    <% } %>
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">
+                                                                <%= product.name %>
+                                                            </h5>
+                                                            <p class="card-text text-muted">
+                                                                <%= product.description ?
+                                                                    product.description.substring(0, 100) + '...' : ''
+                                                                    %>
+                                                            </p>
+                                                            <a href="/product/<%= product.id %>"
+                                                                class="btn btn-primary btn-sm">
+                                                                <i class="fas fa-info-circle"></i> Detaylar
+                                                            </a>
+                                                        </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                            <% } else { %>
+                                <div class="col-12 text-center">
+                                    <p class="text-muted">Henüz ürün eklenmemiş.</p>
+                                </div>
+                                <% } %>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="/products" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-right"></i> Tüm Ürünleri Görüntüle
+                </a>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section class="bg-light py-5">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <h2 class="section-title">Hizmetlerimizi Keşfedin</h2>
+                    <p class="section-subtitle">Profesyonel Ekibimizle Kaliteli Hizmet</p>
+                </div>
+
+                <div class="row">
+                    <% if (typeof services !=='undefined' && services.length> 0) { %>
+                        <% services.slice(0, 4).forEach(service=> { %>
+                            <div class="col-md-6 col-lg-3 mb-4">
+                                <div class="service-card card text-center h-100">
+                                    <% if (service.images && service.images.length> 0) { %>
+                                        <img src="<%= service.images[0].image_url %>" class="card-img-top"
+                                            alt="<%= service.name %>">
+                                        <% } %>
+                                            <div class="card-body">
+                                                <h5 class="card-title">
+                                                    <%= service.name %>
+                                                </h5>
+                                                <p class="card-text">
+                                                    <%= service.short_description || service.description?.substring(0,
+                                                        100) || '' %>
+                                                </p>
+                                            </div>
+                                </div>
+                            </div>
+                            <% }) %>
+                                <% } %>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="/services" class="btn btn-primary">
+                        <i class="fas fa-wrench"></i> Tüm Hizmetleri Görüntüle
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="bg-light py-5">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <h2 class="section-title">Neden Biz?</h2>
+                    <p class="section-subtitle">Sunduğumuz Hizmetlerin Özellikleri</p>
+                </div>
+
+                <div class="row g-4">
+                    <% if (typeof cards !=='undefined' && cards.length> 0) { %>
+                        <% cards.forEach(card=> { %>
+                            <div class="col-md-6 col-lg-<%= card.highlight ? '12' : '6' %> mb-4">
+                                <% if (card.highlight) { %>
+                                    <!-- Featured Card -->
+                                    <div class="card border-0 shadow-lg overflow-hidden">
+                                        <div class="row g-0">
+                                            <% if (card.images && card.images.length> 0) { %>
+                                                <div class="col-lg-6">
+                                                    <img src="<%= card.images[0].image_url %>" class="w-100 h-100"
+                                                        style="object-fit: cover; min-height: 300px;"
+                                                        alt="<%= card.title %>">
+                                                </div>
+                                                <% } else { %>
+                                                    <div
+                                                        class="col-lg-6 bg-<%= card.background_color || 'primary' %> text-white p-5 d-flex align-items-center justify-content-center">
+                                                        <% if (card.icon) { %>
+                                                            <i class="<%= card.icon %> fa-5x opacity-75"></i>
+                                                            <% } %>
+                                                    </div>
+                                                    <% } %>
+                                                        <div class="col-lg-6">
+                                                            <div class="card-body p-5">
+                                                                <h4 class="card-title">
+                                                                    <%= card.title %>
+                                                                </h4>
+                                                                <p class="card-text">
+                                                                    <%= card.content || '' %>
+                                                                </p>
+                                                                <% if (card.link_url && card.link_text) { %>
+                                                                    <a href="<%= card.link_url %>"
+                                                                        class="btn btn-primary">
+                                                                        <%= card.link_text %>
+                                                                    </a>
+                                                                    <% } %>
+                                                            </div>
+                                                        </div>
+                                        </div>
+                                    </div>
+                                    <% } else { %>
+                                        <!-- Regular Card -->
+                                        <div class="card h-100 border-0 shadow-sm text-center hover-lift">
+                                            <% if (card.images && card.images.length> 0) { %>
+                                                <% if (card.images.length> 1) { %>
+                                                    <div class="image-carousel" id="card-carousel-<%= card.id %>">
+                                                        <% card.images.forEach((image, imgIndex)=> { %>
+                                                            <img src="<%= image.image_url %>"
+                                                                class="carousel-image <%= imgIndex === 0 ? 'active' : '' %>"
+                                                                alt="<%= card.title %>"
+                                                                style="height: 250px; object-fit: cover;">
+                                                            <% }) %>
+                                                                <div class="carousel-controls">
+                                                                    <% card.images.forEach((_, imgIndex)=> { %>
+                                                                        <div
+                                                                            class="carousel-dot <%= imgIndex === 0 ? 'active' : '' %>">
+                                                                        </div>
+                                                                        <% }) %>
+                                                                </div>
+                                                    </div>
+                                                    <% } else { %>
+                                                        <img src="<%= card.images[0].image_url %>" class="card-img-top"
+                                                            alt="<%= card.title %>"
+                                                            style="height: 250px; object-fit: cover;">
+                                                        <% } %>
+                                                            <% } %>
+                                                                <div class="card-body p-4">
+                                                                    <% if (card.icon) { %>
+                                                                        <div class="mb-3">
+                                                                            <i
+                                                                                class="<%= card.icon %> fa-3x text-<%= card.background_color || 'primary' %>"></i>
+                                                                        </div>
+                                                                        <% } %>
+                                                                            <h5 class="card-title">
+                                                                                <%= card.title %>
+                                                                            </h5>
+                                                                            <p class="card-text text-muted">
+                                                                                <%= card.content || '' %>
+                                                                            </p>
+                                                                            <% if (card.link_url && card.link_text) { %>
+                                                                                <a href="<%= card.link_url %>"
+                                                                                    class="btn btn-sm btn-outline-primary mt-3">
+                                                                                    <%= card.link_text %>
+                                                                                </a>
+                                                                                <% } %>
+                                                                </div>
+                                        </div>
+                                        <% } %>
+                            </div>
+                            <% }) %>
+                                <% } %>
+                </div>
+            </div>
+        </section>
+
+        <% const additionalScripts=` <style>
+            .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+            }
+
+            .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            }
+
+            .section-subtitle {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            }
+
+            .product-card, .service-card {
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+
+            .product-card:hover, .service-card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            }
+
+            /* Image Carousel Styles */
+            .image-carousel {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            border-radius: 8px;
+            }
+
+            .carousel-image {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            object-fit: cover;
+            }
+
+            .carousel-image.active {
+            opacity: 1;
+            }
+
+            .carousel-controls {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+            }
+
+            .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            }
+
+            .carousel-dot.active {
+            background-color: rgba(255, 255, 255, 1);
+            }
+
+            .carousel-dot:hover {
+            background-color: rgba(255, 255, 255, 0.8);
+            }
+            nextSlide() {
+            this.goToSlide((this.currentIndex + 1) % this.images.length);
+            }
+            }
+
+            // Initialize carousels
+            document.addEventListener('DOMContentLoaded', function () {
+            const carousels = document.querySelectorAll('.image-carousel');
+            carousels.forEach(carousel => {
+            new ImageCarousel(carousel.id);
+            });
+            });
+            </script>
+            `;
+            %>
+
+            <%- include('../partials/public_footer') %>

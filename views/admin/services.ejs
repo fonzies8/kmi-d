@@ -1,0 +1,101 @@
+<% const title='Hizmet Yönetimi' ; const pageTitle='Hizmet Yönetimi' ; const activeMenu='services' ; %>
+    <%- include('../partials/admin_header') %>
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-wrench"></i> Hizmetler</h5>
+                <button class="btn btn-light btn-sm" id="addServiceBtn" data-bs-toggle="modal"
+                    data-bs-target="#serviceModal">
+                    <i class="fas fa-plus"></i> Yeni Hizmet Ekle
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="servicesTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Resim</th>
+                                <th>Hizmet Adı</th>
+                                <th style="width: 80px;">Sıra</th>
+                                <th>Durum</th>
+                                <th>Tarih</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="servicesBody">
+                            <tr>
+                                <td colspan="6" class="text-center">Yükleniyor...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Service Modal -->
+        <div class="modal fade" id="serviceModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTitle">Yeni Hizmet Ekle</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form id="serviceForm" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <input type="hidden" id="serviceId" name="serviceId">
+
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Hizmet Adı *</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="short_description" class="form-label">Kısa Açıklama</label>
+                                <textarea class="form-control" id="short_description" name="short_description"
+                                    rows="2"></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Detaylı Açıklama</label>
+                                <textarea class="form-control" id="description" name="description" rows="4"></textarea>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="display_order" class="form-label">Görüntülenme Sırası</label>
+                                    <input type="number" class="form-control" id="display_order" name="display_order"
+                                        value="0" min="0">
+                                    <small class="text-muted">Küçük rakam = Daha yukarıda gösterilir (0=ilk)</small>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="status" class="form-label">Durum</label>
+                                    <select class="form-select" id="status" name="status">
+                                        <option value="active">Aktif</option>
+                                        <option value="inactive">Pasif</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="images" class="form-label">Resimler (Çoklu seçim yapabilirsiniz)</label>
+                                <input type="file" class="form-control" id="images" name="images" multiple
+                                    accept="image/*" onchange="previewImages(this, 'imagePreview')">
+                                <div id="imagePreview" class="mt-2"></div>
+                            </div>
+
+                            <div id="existingImages" class="mb-3"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                            <button type="submit" class="btn btn-primary">Kaydet</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script src="/js/services-admin.js"></script>
+
+        <%- include('../partials/admin_footer') %>
