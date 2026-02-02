@@ -117,31 +117,22 @@ if (process.env.DATABASE_URL) {
 }
 
 // Initialize Sequelize
-// If DATABASE_URL is provided, use it directly (for Render, Heroku, etc.)
-const sequelize = process.env.DATABASE_URL
-  ? new Sequelize(process.env.DATABASE_URL, {
-      dialect: 'postgres',
-      logging: dbConfig.logging,
-      pool: dbConfig.pool,
-      define: dbConfig.define,
-      dialectOptions: dbConfig.dialectOptions,
-      retry: dbConfig.retry
-    })
-  : new Sequelize(
-      dbConfig.database,
-      dbConfig.username,
-      dbConfig.password,
-      {
-        host: dbConfig.host,
-        port: dbConfig.port,
-        dialect: dbConfig.dialect,
-        logging: dbConfig.logging,
-        pool: dbConfig.pool,
-        define: dbConfig.define,
-        dialectOptions: dbConfig.dialectOptions,
-        retry: dbConfig.retry
-      }
-    );
+// Always use parsed dbConfig (works for both DATABASE_URL and individual vars)
+const sequelize = new Sequelize(
+  dbConfig.database,
+  dbConfig.username,
+  dbConfig.password,
+  {
+    host: dbConfig.host,
+    port: dbConfig.port,
+    dialect: dbConfig.dialect,
+    logging: dbConfig.logging,
+    pool: dbConfig.pool,
+    define: dbConfig.define,
+    dialectOptions: dbConfig.dialectOptions,
+    retry: dbConfig.retry
+  }
+);
 
 // Test database connection with retry mechanism
 const testConnection = async (retries = 3, delay = 2000) => {
