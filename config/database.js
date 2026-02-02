@@ -7,14 +7,21 @@ let dbConfig = {};
 if (process.env.DATABASE_URL) {
   // Parse PostgreSQL connection string
   // Format: postgresql://username:password@host:port/database
-  const url = new URL(process.env.DATABASE_URL);
-  dbConfig = {
-    database: url.pathname.slice(1), // Remove leading '/'
-    username: url.username,
-    password: url.password,
-    host: url.hostname,
-    port: parseInt(url.port) || 5432,
-    dialect: 'postgres',
+  try {
+    const url = new URL(process.env.DATABASE_URL);
+    
+    // Validate parsed values
+    if (!url.hostname || !url.username || !url.password || !url.pathname) {
+      throw new Error('Invalid DATABASE_URL: missing required components');
+    }
+    
+    dbConfig = {
+      database: url.pathname.slice(1) || url.pathname.substring(1), // Remove leading '/'
+      username: url.username,
+      password: url.password,
+      host: url.hostname,
+      port: parseInt(url.port) || 5432,
+      dialect: 'postgres',
     logging: process.env.NODE_ENV === 'development'
       ? (msg) => logger.debug('[DB] ' + msg)
       : false,
@@ -58,8 +65,23 @@ if (process.env.DATABASE_URL) {
         /SequelizeInvalidConnectionError/,
         /SequelizeConnectionTimedOutError/
       ]
+    };
+    
+    // Validate dbConfig values
+    if (!dbConfig.host || !dbConfig.database || !dbConfig.username || !dbConfig.password) {
+      throw new Error(`Invalid dbConfig: host=${dbConfig.host}, database=${dbConfig.database}, username=${dbConfig.username}`);
     }
-  };
+    
+    // Debug logging
+    logger.info('DATABASE_URL parsed successfully');
+    logger.debug(`Parsed host: ${dbConfig.host}`);
+    logger.debug(`Parsed port: ${dbConfig.port}`);
+    logger.debug(`Parsed database: ${dbConfig.database}`);
+    logger.debug(`Parsed username: ${dbConfig.username}`);
+  } catch (error) {
+    logger.error('DATABASE_URL parse error:', error.message);
+    throw new Error(`Invalid DATABASE_URL format: ${error.message}`);
+  }
 } else {
   // Use individual environment variables
   dbConfig = {
@@ -114,6 +136,18 @@ if (process.env.DATABASE_URL) {
       ]
     }
   };
+}
+
+// Validate dbConfig before initializing Sequelize
+if (!dbConfig.database || !dbConfig.username || !dbConfig.password || !dbConfig.host) {
+  logger.error('Invalid dbConfig:', {
+    database: dbConfig.database,
+    username: dbConfig.username,
+    password: dbConfig.password ? '***' : undefined,
+    host: dbConfig.host,
+    port: dbConfig.port
+  });
+  throw new Error('Database configuration is incomplete. Please check your environment variables.');
 }
 
 // Initialize Sequelize
