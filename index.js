@@ -192,11 +192,13 @@ const startServer = async () => {
         await testConnection();
 
         // Sync database (only in development) — do NOT auto-sync in production
-        if (process.env.NODE_ENV !== 'production') {
+        // Exception: INITIAL_SETUP=true allows sync in production for first-time setup
+        if (process.env.NODE_ENV !== 'production' || process.env.INITIAL_SETUP === 'true') {
             logger.info('📊 Veritabanı tabloları kontrol ediliyor...');
             await syncDatabase(false);
         } else {
             logger.warn('⚠️  Production ortamında sync devre dışı. Migrations kullanın. (bkz: DEPLOYMENT_CHECKLIST.md)');
+            logger.warn('⚠️  İlk kurulum için INITIAL_SETUP=true environment variable ekleyin.');
         }
 
         // Initialize default settings

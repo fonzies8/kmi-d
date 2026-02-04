@@ -42,8 +42,10 @@ HomepageCardImage.belongsTo(HomepageCard, {
 const logger = require('../utils/logger');
 
 // Sync database (only in development, never in production!)
+// Exception: INITIAL_SETUP=true allows sync in production for first-time setup
 const syncDatabase = async (force = false) => {
   const isProduction = process.env.NODE_ENV === 'production';
+  const allowInitialSetup = process.env.INITIAL_SETUP === 'true';
 
   if (isProduction && force) {
     logger.error('❌ PRODUCTION ORTAMINDA FORCE SYNC YAPILAMAZ!');
@@ -51,9 +53,15 @@ const syncDatabase = async (force = false) => {
   }
 
   try {
-    if (isProduction) {
+    if (isProduction && !allowInitialSetup) {
       logger.warn('⚠️  Production ortamında sync devre dışı. Migrations kullanın.');
+      logger.warn('⚠️  İlk kurulum için INITIAL_SETUP=true environment variable ekleyin.');
       return;
+    }
+
+    if (isProduction && allowInitialSetup) {
+      logger.warn('⚠️  İLK KURULUM MODU: Veritabanı tabloları oluşturuluyor...');
+      logger.warn('⚠️  Tablolar oluşturulduktan sonra INITIAL_SETUP=true değerini kaldırın!');
     }
 
     const options = force
@@ -62,6 +70,10 @@ const syncDatabase = async (force = false) => {
 
     await sequelize.sync(options);
     logger.info('✓ Veritabanı tabloları senkronize edildi!');
+    
+    if (isProduction && allowInitialSetup) {
+      logger.warn('⚠️  ÖNEMLİ: INITIAL_SETUP=true değerini Render Environment Variables\'dan kaldırın!');
+    }
   } catch (error) {
     logger.error('✗ Veritabanı senkronizasyon hatası:', error.message);
     throw error;
