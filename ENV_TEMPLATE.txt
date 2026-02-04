@@ -1,0 +1,95 @@
+# ============================================
+# KARTAL METAL İŞ - ENVIRONMENT VARIABLES
+# ============================================
+# Bu dosyayı .env olarak kopyalayın ve değerleri doldurun
+# Windows: copy ENV_TEMPLATE.txt .env
+# Linux/Mac: cp ENV_TEMPLATE.txt .env
+
+# ============================================
+# SERVER CONFIGURATION
+# ============================================
+PORT=3008
+NODE_ENV=development
+
+# ============================================
+# DATABASE CONFIGURATION
+# ============================================
+# Seçenek 1: DATABASE_URL kullanın (Render, Heroku için önerilir)
+# Render deployment için bu satırı kullanın (External Database URL):
+DATABASE_URL=postgresql://kartal_metal_db_user:s5VUPO2tQ42wvpv9H1CG3zG9Px6YOaJF@dpg-d60831ali9vc73aq8crg-a.frankfurt-postgres.render.com:5432/kartal_metal_db
+
+# Seçenek 2: Ayrı ayrı değişkenler kullanın (Local development için)
+# Render PostgreSQL Bilgileri:
+# Hostname: dpg-d60831ali9vc73aq8crg-a.frankfurt-postgres.render.com
+# Port: 5432
+# Database: kartal_metal_db
+# Username: kartal_metal_db_user
+# Password: s5VUPO2tQ42wvpv9H1CG3zG9Px6YOaJF
+
+# Local Development için:
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=kartal_metal_db
+DB_USER=postgres
+DB_PASSWORD=your_password_here
+
+# Render PostgreSQL için (Local'den bağlanmak isterseniz):
+# DB_HOST=dpg-d60831ali9vc73aq8crg-a.frankfurt-postgres.render.com
+# DB_PORT=5432
+# DB_NAME=kartal_metal_db
+# DB_USER=kartal_metal_db_user
+# DB_PASSWORD=s5VUPO2tQ42wvpv9H1CG3zG9Px6YOaJF
+
+# Database Pool Configuration (Opsiyonel)
+DB_POOL_MAX=10
+DB_POOL_MIN=2
+DB_POOL_ACQUIRE=30000
+DB_POOL_IDLE=10000
+DB_POOL_EVICT=1000
+
+# SSL Configuration (Production için - Render otomatik kullanır)
+# DB_SSL=true
+
+# ============================================
+# SECURITY CONFIGURATION
+# ============================================
+# ÖNEMLİ: Bu değerleri güçlü, rastgele stringlerle değiştirin!
+# En az 32 karakter uzunluğunda olmalı
+JWT_SECRET=your_super_secret_jwt_key_change_this_in_production_min_32_chars
+SESSION_SECRET=your_super_secret_session_key_change_this_in_production_min_32_chars
+BCRYPT_ROUNDS=10
+
+# ============================================
+# COOKIE CONFIGURATION
+# ============================================
+COOKIE_MAX_AGE=86400000
+REMEMBER_ME_DURATION=2592000000
+
+# ============================================
+# UPLOAD CONFIGURATION
+# ============================================
+MAX_FILE_SIZE=5242880
+ALLOWED_FILE_TYPES=image/jpeg,image/png,image/webp,image/jpg
+
+# ============================================
+# RATE LIMITING
+# ============================================
+LOGIN_RATE_LIMIT=5
+LOGIN_RATE_WINDOW=15
+API_RATE_LIMIT=100
+API_RATE_WINDOW=15
+
+# ============================================
+# CORS CONFIGURATION (Opsiyonel)
+# ============================================
+# CORS_ORIGIN=false
+# CORS_ORIGIN=https://yourdomain.com
+
+# ============================================
+# RENDER DEPLOYMENT NOTLARI
+# ============================================
+# Render'da deployment yaparken:
+# 1. DATABASE_URL otomatik olarak Render tarafından sağlanır
+# 2. JWT_SECRET ve SESSION_SECRET için Render'da "Generate" butonunu kullanın
+# 3. PORT Render tarafından otomatik ayarlanır (10000)
+# 4. NODE_ENV=production olarak ayarlayın

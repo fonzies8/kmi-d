@@ -65,7 +65,8 @@ if (process.env.DATABASE_URL) {
         /SequelizeInvalidConnectionError/,
         /SequelizeConnectionTimedOutError/
       ]
-    };
+    }
+  };
     
     // Validate dbConfig values
     if (!dbConfig.host || !dbConfig.database || !dbConfig.username || !dbConfig.password) {
